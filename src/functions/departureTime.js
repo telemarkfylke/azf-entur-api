@@ -4,7 +4,11 @@ const { getDepartureTime } = require("../lib/helpers/enturGraphQLQueries/getDepa
 const handleDepartureTime = async (request) => {
   const { quayId, date, line } = request.params;
   const departureTimes = await getDepartureTime(quayId, date, line);
-  return { status: 200, jsonBody: departureTimes };
+
+  return {
+    status: 200,
+    jsonBody: departureTimes
+  };
 };
 
 app.http("departureTime", {

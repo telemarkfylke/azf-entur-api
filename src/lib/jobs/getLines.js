@@ -13,6 +13,7 @@ const { deleteAllEntries } = require("../helpers/mongoDBQueries/deleteAllEntires
 
 const downloadGTFSFileAndImportLines = async () => {
   const linesObjects = [];
+
   try {
     const response = await fetch(enTur.gtfsUrl);
     if (!response.ok) {
@@ -25,6 +26,7 @@ const downloadGTFSFileAndImportLines = async () => {
     for (const entry of zipEntries) {
       if (entry.entryName === "routes.txt") {
         const csvData = entry.getData().toString("utf8");
+
         // Skip headers
         csvData
           .split("\n")
@@ -62,6 +64,7 @@ const downloadGTFSFileAndImportLines = async () => {
 
   // Add new lines to MongoDB
   await addNewLines(linesObjects);
+
   return { message: `Successfully imported ${linesObjects.length} lines from GTFS file` };
 };
 

@@ -10,6 +10,7 @@ const { logger } = require("@vestfoldfylke/loglady");
  */
 const addNewLines = async (linesArray) => {
   const mongoClient = await getMongoClient();
+
   try {
     logger.info("Adding {LineCount} new lines to collection {Collection}", linesArray.length, mongoDB.linesCollection);
     await mongoClient.db(mongoDB.dbName).collection(mongoDB.linesCollection).insertMany(linesArray);

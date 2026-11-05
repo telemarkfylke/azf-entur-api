@@ -5,7 +5,10 @@ const handleRouteTypes = async () => {
   // Returns the route types found in the GTFS data from EnTur
   const routeTypes = await getCurrentValidRouteTypes();
 
-  return { status: 200, jsonBody: routeTypes };
+  return {
+    status: 200,
+    jsonBody: routeTypes
+  };
 };
 
 app.http("routeTypes", {

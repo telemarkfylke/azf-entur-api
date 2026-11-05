@@ -10,10 +10,13 @@ const { logger } = require("@vestfoldfylke/loglady");
  */
 const getLines = async (routeTypeFilter) => {
   const mongoClient = await getMongoClient();
+
   try {
     logger.info("Fetching lines from collection {Collection}", mongoDB.linesCollection);
+
     const query = routeTypeFilter ? { routeType: routeTypeFilter } : {}; // use filter or return all lines
     const lines = await mongoClient.db(mongoDB.dbName).collection(mongoDB.linesCollection).find(query).toArray();
+
     return lines;
   } catch (error) {
     logger.errorException(error, "Failed to fetch lines from collection {Collection}", mongoDB.linesCollection);

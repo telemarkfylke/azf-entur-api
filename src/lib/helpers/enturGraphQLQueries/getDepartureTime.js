@@ -23,18 +23,22 @@ const getDepartureTime = async (quayId, date, line) => {
 
   // Validate date format "2025-12-02T00:00:000.000Z"
   const dateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{3}\.\d{3}Z$/;
+
   if (!dateRegex.test(date)) {
     // Try to convert to ISO 8601
     logger.warn("Date {Date} is not ISO 8601, attempting to convert", date);
+
     const isoDate = new Date(date).toISOString();
     if (Number.isNaN(Date.parse(isoDate))) {
       logger.error("Invalid date format for {Date}. Must be ISO 8601", date);
       throw new Error("Invalid date format. Must be ISO 8601");
     }
+
     date = isoDate;
   }
 
   logger.info("Fetching departure time for QuayId {QuayId}, Date {Date}, Line {Line}", quayId, date, line);
+
   const headers = {
     "Content-Type": "application/json",
     "ET-Client-Name": enTur.ETClientName
@@ -60,9 +64,11 @@ const getDepartureTime = async (quayId, date, line) => {
             }
         }`
   };
+
   // Making the POST request to EnTur GraphQL API
   try {
     logger.info("Making request to EnTur GraphQL API for QuayId {QuayId}, Date {Date}, Line {Line}", quayId, date, line);
+
     const response = await fetch(enTur.journeyPlannerApiUrl, {
       method: "POST",
       headers,
@@ -77,10 +83,12 @@ const getDepartureTime = async (quayId, date, line) => {
       logger.error("Error in GraphQL response for QuayId {QuayId}, Date {Date}, Line {Line}: {@Errors}", quayId, date, line, responseData.errors);
       throw new Error("Error in GraphQL response");
     }
+
     logger.info("Fetched {DepartureCount} departure times for QuayId {QuayId}, Date {Date}, Line {Line}", responseData.data.stopPlace.estimatedCalls.length, quayId, date, line);
     const departureTimes = responseData.data.stopPlace.estimatedCalls.map((call) => ({
       expectedDepartureTime: convertToTimeOnly(call.expectedDepartureTime)
     }));
+
     return departureTimes;
   } catch (error) {
     logger.errorException(error, "Error fetching departure times from EnTur GraphQL API for QuayId {QuayId}, Date {Date}, Line {Line}", quayId, date, line);

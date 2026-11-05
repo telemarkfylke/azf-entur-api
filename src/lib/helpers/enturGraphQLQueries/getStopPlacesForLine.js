@@ -14,7 +14,9 @@ const getStopPlacesForLine = async (routeId) => {
     logger.error("routeId must be provided");
     throw new Error("routeId must be provided");
   }
+
   logger.info("Fetching stopPlaces for line with RouteId {RouteId}", routeId);
+
   const headers = {
     "Content-Type": "application/json",
     "ET-Client-Name": enTur.ETClientName
@@ -23,7 +25,6 @@ const getStopPlacesForLine = async (routeId) => {
   /**
    * GraphQL query to fetch stopPlaces for a given line (routeId)
    */
-
   const graphQLQuery = {
     query: `{
             line(id: "${routeId}") {
@@ -38,6 +39,7 @@ const getStopPlacesForLine = async (routeId) => {
             }
         }`
   };
+
   // Making the POST request to EnTur GraphQL API
   try {
     logger.info("Making request to EnTur GraphQL API for RouteId {RouteId}", routeId);
@@ -56,7 +58,9 @@ const getStopPlacesForLine = async (routeId) => {
       logger.error("Error in GraphQL response for RouteId {RouteId}: {@Errors}", routeId, responseData.errors);
       throw new Error("Error in GraphQL response");
     }
+
     logger.info("Fetched {StopPlaceCount} stopPlaces for line with RouteId {RouteId}", responseData.data.line.quays.length, routeId);
+
     return responseData.data.line.quays;
   } catch (error) {
     logger.errorException(error, "Error fetching stopPlaces from EnTur GraphQL API for RouteId {RouteId}", routeId);

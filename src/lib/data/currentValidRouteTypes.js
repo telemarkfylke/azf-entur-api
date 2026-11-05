@@ -13,6 +13,7 @@ const { logger } = require("@vestfoldfylke/loglady");
 const getCurrentValidRouteTypes = async () => {
   try {
     const lines = await getLines();
+
     const routeTypesInUse = [...new Set(lines.map((line) => line.routeType))]; // Get unique route types from lines
     let validRouteTypes = routeTypesTemplate.filter((rt) => routeTypesInUse.includes(rt.gtfsRouteTypeCode.toString()));
     // Get unique netexModes from validRouteTypes
@@ -21,12 +22,14 @@ const getCurrentValidRouteTypes = async () => {
     });
     validRouteTypes = prettifyRouteType(validRouteTypes); // Add a pretty route name that can be used in the frontend
     logger.info("Found {RouteTypeCount} valid route types in use", validRouteTypes.length);
+
     return validRouteTypes;
   } catch (error) {
     logger.errorException(error, "Failed to get current valid route types");
     throw new Error("Failed to get current valid route types");
   }
 };
+
 module.exports = {
   getCurrentValidRouteTypes
 };

@@ -14,12 +14,19 @@ const getMongoClient = async () => {
     client = new MongoClient(mongoDB.connectionString);
     logger.info("MongoClient created");
   }
+
   return client;
 };
 
 const closeMongoClient = () => {
-  if (client) client.close();
+  if (client) {
+    client.close();
+  }
+
   client = null;
 };
 
-module.exports = { getMongoClient, closeMongoClient };
+module.exports = {
+  getMongoClient,
+  closeMongoClient
+};

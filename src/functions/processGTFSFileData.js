@@ -4,6 +4,7 @@ const { logger } = require("@vestfoldfylke/loglady");
 
 const handleProcessGTFSFileData = async () => {
   logger.info("Starting scheduled function processGTFSFileData");
+
   const result = await downloadGTFSFileAndImportLines();
   logger.info("Finished scheduled function processGTFSFileData: {@Result}", result);
 };

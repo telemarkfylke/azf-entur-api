@@ -13,6 +13,7 @@ const deleteAllEntries = async (collection) => {
   }
 
   const mongoClient = await getMongoClient();
+
   try {
     logger.info("Deleting all entries from collection {Collection}", collection);
     await mongoClient.db(mongoDB.dbName).collection(collection).deleteMany({});

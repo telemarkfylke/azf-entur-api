@@ -3,7 +3,11 @@ const { downloadGTFSFileAndImportLines } = require("../lib/jobs/getLines.js");
 
 const handleDevTest = async () => {
   const result = await downloadGTFSFileAndImportLines();
-  return { status: 200, jsonBody: result };
+
+  return {
+    status: 200,
+    jsonBody: result
+  };
 };
 
 app.http("devTest", {
