@@ -24,7 +24,7 @@ This application fetches and processes public transport data from EnTur (Norway'
 - **lines** - HTTP trigger for transport lines (with optional filtering)
 - **stopPlaces** - HTTP trigger for stop places by route ID
 - **departureTime** - HTTP trigger for departure times from a specific stop
-- **processGTFSFileData** - Timer trigger for daily data updates (04:00 UTC)
+- **processGTFSFileData** - Timer trigger for data updates (schedule set by `PROCESS_GTFS_FILE_DATA_SCHEDULE`)
 
 ### Data Sources
 
@@ -115,7 +115,8 @@ Parameters:
        "MONGODB_LINES_COLLECTION": "lines",
        "ET_CLIENT_NAME": "your-client-name",
        "GTFS_URL": "https://storage.googleapis.com/marduk-production/outbound/gtfs/rb_nsb-aggregated-gtfs.zip",
-       "EN_TUR_JOURNEY_PLANNER_API_URL": "https://api.entur.io/journey-planner/v3/graphql"
+       "EN_TUR_JOURNEY_PLANNER_API_URL": "https://api.entur.io/journey-planner/v3/graphql",
+       "PROCESS_GTFS_FILE_DATA_SCHEDULE": "0 0 4 * * *"
      }
    }
    ```
@@ -128,14 +129,15 @@ Parameters:
 
 ### Environment Variables
 
-| Variable                         | Description                    | Required |
-| -------------------------------- | ------------------------------ | -------- |
-| `MONGODB_DB_NAME`                | MongoDB database name          | Yes      |
-| `MONGODB_CONNECTION_STRING`      | MongoDB connection string      | Yes      |
-| `MONGODB_LINES_COLLECTION`       | Collection name for lines data | Yes      |
-| `ET_CLIENT_NAME`                 | EnTur client identifier        | Yes      |
-| `GTFS_URL`                       | URL to GTFS data file          | Yes      |
-| `EN_TUR_JOURNEY_PLANNER_API_URL` | EnTur GraphQL API endpoint     | Yes      |
+| Variable                          | Description                                                                          | Required |
+| --------------------------------- | ------------------------------------------------------------------------------------ | -------- |
+| `MONGODB_DB_NAME`                 | MongoDB database name                                                                | Yes      |
+| `MONGODB_CONNECTION_STRING`       | MongoDB connection string                                                            | Yes      |
+| `MONGODB_LINES_COLLECTION`        | Collection name for lines data                                                       | Yes      |
+| `ET_CLIENT_NAME`                  | EnTur client identifier                                                              | Yes      |
+| `GTFS_URL`                        | URL to GTFS data file                                                                | Yes      |
+| `EN_TUR_JOURNEY_PLANNER_API_URL`  | EnTur GraphQL API endpoint                                                           | Yes      |
+| `PROCESS_GTFS_FILE_DATA_SCHEDULE` | NCRONTAB schedule for `processGTFSFileData` (e.g. `0 0 4 * * *` for 04:00 UTC daily) | Yes      |
 
 ## 🚀 Deployment
 
@@ -152,7 +154,7 @@ Parameters:
 
 ## 📊 Data Processing
 
-The application processes GTFS data daily at 04:00 UTC through the `processGTFSFileData` timer function:
+The application processes GTFS data on the schedule set in `PROCESS_GTFS_FILE_DATA_SCHEDULE` (e.g. daily at 04:00 UTC) through the `processGTFSFileData` timer function:
 
 1. Downloads the latest GTFS zip file from EnTur
 2. Extracts and parses `routes.txt`
