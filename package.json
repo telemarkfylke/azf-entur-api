@@ -5,7 +5,8 @@
   "main": "src/functions/*.js",
   "scripts": {
     "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "test": "npx @biomejs/biome check",
+    "lint:fix": "npx @biomejs/biome check --write"
   },
   "dependencies": {
     "@azure/functions": "^4.17.0",
@@ -15,6 +16,7 @@
     "mongodb": "^7.7.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.4",
     "azure-functions-core-tools": "^4.16.0"
   }
 }
