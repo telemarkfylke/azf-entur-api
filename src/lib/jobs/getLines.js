@@ -1,4 +1,3 @@
-const { default: axios } = require("axios");
 const { enTur, mongoDB } = require("../../../config.js");
 const { logger } = require("@vtfk/logger");
 const AdmZip = require("adm-zip");
@@ -15,8 +14,12 @@ const { deleteAllEntries } = require("../helpers/mongoDBQueries/deleteAllEntires
 const downloadGTFSFileAndImportLines = async () => {
   const linesObjects = [];
   try {
-    const response = await axios.get(enTur.gtfsUrl, { responseType: "arraybuffer" });
-    const zip = new AdmZip(response.data);
+    const response = await fetch(enTur.gtfsUrl);
+    if (!response.ok) {
+      throw new Error(`GTFS download responded with ${response.status} ${response.statusText}`);
+    }
+
+    const zip = new AdmZip(Buffer.from(await response.arrayBuffer()));
     const zipEntries = zip.getEntries();
 
     for (const entry of zipEntries) {
