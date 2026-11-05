@@ -1,5 +1,5 @@
 const { enTur } = require("../../../../config.js");
-const { logger } = require("@vtfk/logger");
+const { logger } = require("@vestfoldfylke/loglady");
 
 /**
  * Helper function to add stopPlaces to a provided line, using the routeId from GTFS data in EnTur stored in MongoDB
@@ -11,10 +11,10 @@ const { logger } = require("@vtfk/logger");
 
 const getStopPlacesForLine = async (routeId) => {
   if (!routeId) {
-    logger("error", ["enturGraphQLQueries", "getStopPlacesForLine", "routeId must be provided"]);
+    logger.error("routeId must be provided");
     throw new Error("routeId must be provided");
   }
-  logger("info", ["enturGraphQLQueries", "getStopPlacesForLine", `Fetching stopPlaces for line with routeId: ${routeId}`]);
+  logger.info("Fetching stopPlaces for line with RouteId {RouteId}", routeId);
   const headers = {
     "Content-Type": "application/json",
     "ET-Client-Name": enTur.ETClientName
@@ -40,7 +40,7 @@ const getStopPlacesForLine = async (routeId) => {
   };
   // Making the POST request to EnTur GraphQL API
   try {
-    logger("info", ["enturGraphQLQueries", "getStopPlacesForLine", `Making request to EnTur GraphQL API for routeId: ${routeId}`]);
+    logger.info("Making request to EnTur GraphQL API for RouteId {RouteId}", routeId);
 
     const response = await fetch(enTur.journeyPlannerApiUrl, {
       method: "POST",
@@ -53,14 +53,13 @@ const getStopPlacesForLine = async (routeId) => {
 
     const responseData = await response.json();
     if (responseData.errors) {
-      logger("error", ["enturGraphQLQueries", "getStopPlacesForLine", "Error in GraphQL response", responseData.errors]);
+      logger.error("Error in GraphQL response for RouteId {RouteId}: {@Errors}", routeId, responseData.errors);
       throw new Error("Error in GraphQL response");
     }
-    logger("info", ["enturGraphQLQueries", "getStopPlacesForLine", `Fetched ${responseData.data.line.quays.length} stopPlaces for line with routeId: ${routeId}`]);
+    logger.info("Fetched {StopPlaceCount} stopPlaces for line with RouteId {RouteId}", responseData.data.line.quays.length, routeId);
     return responseData.data.line.quays;
   } catch (error) {
-    logger("error", ["enturGraphQLQueries", "getStopPlacesForLine", "Error making request to EnTur GraphQL API", error]);
-    logger("error", ["enturGraphQLQueries", "getStopPlacesForLine", "Error fetching stopPlaces from EnTur GraphQL API", error.message]);
+    logger.errorException(error, "Error fetching stopPlaces from EnTur GraphQL API for RouteId {RouteId}", routeId);
     throw new Error("Error fetching stopPlaces from EnTur GraphQL API");
   }
 };

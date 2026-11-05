@@ -1,7 +1,7 @@
 const { prettifyRouteType } = require("../helpers/lib/prettyRouteType.js");
 const { getLines } = require("../helpers/mongoDBQueries/getLines.js");
 const { routeTypesTemplate } = require("./routeTypeTemplate.js");
-const { logger } = require("@vtfk/logger");
+const { logger } = require("@vestfoldfylke/loglady");
 
 /**
  * Fetches the valid route types from the routeTypeTemplate.js file
@@ -20,10 +20,10 @@ const getCurrentValidRouteTypes = async () => {
       return validRouteTypes.find((rt) => rt.netexMode === netexMode);
     });
     validRouteTypes = prettifyRouteType(validRouteTypes); // Add a pretty route name that can be used in the frontend
-    logger("info", ["currentValidRouteTypes", "getCurrentValidRouteTypes", `Found ${validRouteTypes.length} valid route types in use`]);
+    logger.info("Found {RouteTypeCount} valid route types in use", validRouteTypes.length);
     return validRouteTypes;
   } catch (error) {
-    logger("error", ["currentValidRouteTypes", "getCurrentValidRouteTypes", "Failed to get current valid route types", error.message]);
+    logger.errorException(error, "Failed to get current valid route types");
     throw new Error("Failed to get current valid route types");
   }
 };

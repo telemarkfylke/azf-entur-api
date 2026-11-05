@@ -1,6 +1,6 @@
 const { getMongoClient } = require("../../mongoDB/mongoClient.js");
 const { mongoDB } = require("../../../../config.js");
-const { logger } = require("@vtfk/logger");
+const { logger } = require("@vestfoldfylke/loglady");
 
 /**
  * Get all lines from MongoDB. With optional filtering by routeType.
@@ -11,12 +11,12 @@ const { logger } = require("@vtfk/logger");
 const getLines = async (routeTypeFilter) => {
   const mongoClient = await getMongoClient();
   try {
-    logger("info", ["mongoDBQueries", "getLines", `Fetching lines from collection ${mongoDB.linesCollection}`]);
+    logger.info("Fetching lines from collection {Collection}", mongoDB.linesCollection);
     const query = routeTypeFilter ? { routeType: routeTypeFilter } : {}; // use filter or return all lines
     const lines = await mongoClient.db(mongoDB.dbName).collection(mongoDB.linesCollection).find(query).toArray();
     return lines;
   } catch (error) {
-    logger("error", ["mongoDBQueries", "getLines", "Failed to fetch lines", error.message]);
+    logger.errorException(error, "Failed to fetch lines from collection {Collection}", mongoDB.linesCollection);
     throw new Error("Failed to fetch lines");
   }
 };

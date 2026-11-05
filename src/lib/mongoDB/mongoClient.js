@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 const { mongoDB } = require("../../../config.js");
-const { logger } = require("@vtfk/logger");
+const { logger } = require("@vestfoldfylke/loglady");
 
 let client = null;
 
@@ -10,9 +10,9 @@ let client = null;
  */
 const getMongoClient = async () => {
   if (!client) {
-    logger("info", ["mongo-client", "Client does not exist - creating"]);
+    logger.info("MongoClient does not exist - creating");
     client = new MongoClient(mongoDB.connectionString);
-    logger("info", ["mongo-client", "Client connected"]);
+    logger.info("MongoClient created");
   }
   return client;
 };

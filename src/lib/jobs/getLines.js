@@ -1,5 +1,5 @@
 const { enTur, mongoDB } = require("../../../config.js");
-const { logger } = require("@vtfk/logger");
+const { logger } = require("@vestfoldfylke/loglady");
 const AdmZip = require("adm-zip");
 const { addNewLines } = require("../helpers/mongoDBQueries/addNewLines.js");
 const { deleteAllEntries } = require("../helpers/mongoDBQueries/deleteAllEntires.js");
@@ -48,12 +48,12 @@ const downloadGTFSFileAndImportLines = async () => {
       }
     }
   } catch (error) {
-    logger("error", ["getLines", "downloadGTFSFile", "Failed to download or process GTFS file", error.message]);
+    logger.errorException(error, "Failed to download or process GTFS file from {GtfsUrl}", enTur.gtfsUrl);
     throw new Error("Failed to download or process GTFS file");
   }
 
   if (linesObjects.length === 0) {
-    logger("error", ["getLines", "downloadGTFSFileAndImportLines", "No lines found in GTFS file, something went wrong"]);
+    logger.error("No lines found in routes.txt in GTFS file from {GtfsUrl}", enTur.gtfsUrl);
     throw new Error("No lines found in GTFS file, something went wrong");
   }
 
