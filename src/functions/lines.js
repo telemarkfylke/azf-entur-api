@@ -1,6 +1,7 @@
 const { app } = require("@azure/functions");
 const { getLines } = require("../lib/helpers/mongoDBQueries/getLines.js");
 const { routeTypesTemplate } = require("../lib/data/routeTypeTemplate.js");
+const { handleTrigger } = require("../middleware/handleTrigger.js");
 
 const handleLines = async (request) => {
   // Returnes the lines found with the filter provided in the query string, or all lines if no filter is provided
@@ -47,5 +48,5 @@ app.http("lines", {
   methods: ["GET"],
   authLevel: "function",
   route: "lines/{netexMode?}",
-  handler: handleLines
+  handler: async (request, context) => await handleTrigger(request, context, handleLines)
 });

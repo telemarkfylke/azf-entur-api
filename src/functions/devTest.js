@@ -1,5 +1,6 @@
 const { app } = require("@azure/functions");
 const { downloadGTFSFileAndImportLines } = require("../lib/jobs/getLines.js");
+const { handleTrigger } = require("../middleware/handleTrigger.js");
 
 const handleDevTest = async () => {
   const result = await downloadGTFSFileAndImportLines();
@@ -13,5 +14,5 @@ const handleDevTest = async () => {
 app.http("devTest", {
   methods: ["GET"],
   authLevel: "function",
-  handler: handleDevTest
+  handler: async (request, context) => await handleTrigger(request, context, handleDevTest)
 });

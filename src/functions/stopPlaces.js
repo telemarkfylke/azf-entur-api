@@ -1,5 +1,6 @@
 const { app } = require("@azure/functions");
 const { getStopPlacesForLine } = require("../lib/helpers/enturGraphQLQueries/getStopPlacesForLine.js");
+const { handleTrigger } = require("../middleware/handleTrigger.js");
 
 const handleStopPlaces = async (request) => {
   // Returns the stopPlaces for a given line (routeId) from EnTur GraphQL API
@@ -22,5 +23,5 @@ app.http("stopPlaces", {
   methods: ["GET"],
   authLevel: "function",
   route: "stopPlaces/{routeId}",
-  handler: handleStopPlaces
+  handler: async (request, context) => await handleTrigger(request, context, handleStopPlaces)
 });
